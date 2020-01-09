@@ -2,6 +2,9 @@ package guru.springframework.msscbrewery.web.controller;
 
 import guru.springframework.msscbrewery.services.BeerService;
 import guru.springframework.msscbrewery.web.model.BeerDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +16,14 @@ import java.util.UUID;
 /**
  * Created by jt on 2019-04-20.
  */
+@Slf4j
+@RequiredArgsConstructor
 @Deprecated
 @RequestMapping("/api/v1/beer")
 @RestController
 public class BeerController {
 
     private final BeerService beerService;
-
-    public BeerController(BeerService beerService) {
-        this.beerService = beerService;
-    }
 
     @GetMapping({"/{beerId}"})
     public ResponseEntity<BeerDto> getBeer(@PathVariable("beerId") UUID beerId){
@@ -33,9 +34,10 @@ public class BeerController {
     @PostMapping //POST - create new beer
     public ResponseEntity handlePost(@RequestBody BeerDto beerDto) {
 
-        BeerDto savedDto = beerService.saveNewBeer(beerDto);
+        log.debug("in handle post...");
+        val savedDto = beerService.saveNewBeer(beerDto);
 
-        HttpHeaders headers = new HttpHeaders();
+        val headers = new HttpHeaders();
         //todo add hostname to url
         headers.add("Location", "/api/v1/beer/" + savedDto.getId().toString());
 
