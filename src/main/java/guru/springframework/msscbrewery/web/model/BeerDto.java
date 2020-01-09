@@ -1,12 +1,10 @@
 package guru.springframework.msscbrewery.web.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -28,4 +26,10 @@ public class BeerDto {
 
     @Positive(message = "upc should be positive")
     private Long upc;
+
+    @NonNull
+    private OffsetDateTime createdDate;
+
+    @NonNull
+    private OffsetDateTime lastUpdatedDate;
 }
