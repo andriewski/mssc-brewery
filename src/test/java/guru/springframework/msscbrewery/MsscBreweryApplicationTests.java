@@ -36,24 +36,28 @@ public class MsscBreweryApplicationTests {
 	ObjectMapper objectMapper;
 
 	private BeerDto validBeer;
+	private UUID beerId;
 
 	@Before
 	public void setUp() {
-		validBeer = BeerDto.builder().id(UUID.randomUUID())
+		validBeer = BeerDto.builder()
 				.beerName("Beer1")
 				.beerStyle("PALE_ALE")
 				.upc(1231231231L)
 				.build();
+
+		beerId = UUID.randomUUID();
 	}
 
 	@Test
 	public void getBeer() throws Exception {
+		validBeer.setId(beerId);
 		given(beerService.getBeerById(any(UUID.class))).willReturn(validBeer);
 
-		mockMvc.perform(get("/api/v1/beer/" + validBeer.getId().toString()).accept(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get("/api/v1/beer/" + beerId).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.id").value(validBeer.getId().toString()))
+				.andExpect(jsonPath("$.id").value(beerId.toString()))
 				.andExpect(jsonPath("$.beerName").value("Beer1"));
 
 	}
@@ -82,7 +86,7 @@ public class MsscBreweryApplicationTests {
 		String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
 		//when
-		mockMvc.perform(put("/api/v1/beer/" + validBeer.getId())
+		mockMvc.perform(put("/api/v1/beer/" + beerId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(beerDtoJson))
 				.andExpect(status().isNoContent());
@@ -93,7 +97,7 @@ public class MsscBreweryApplicationTests {
 	@Test
 	public void deleteBeerUpdate() throws Exception {
 		//when
-		mockMvc.perform(delete("/api/v1/beer/" + validBeer.getId()))
+		mockMvc.perform(delete("/api/v1/beer/" + beerId))
 				.andExpect(status().isNoContent());
 	}
 
